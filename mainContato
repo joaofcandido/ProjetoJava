@@ -1,0 +1,16 @@
+public class Contato{
+
+    int numero;
+    String nomeContato;
+        public static void main ( String[] args){
+            
+    
+            Contato meuContato;
+            meuContato = new Contato();
+
+            meuContato.numero = 40028922;
+            meuContato.nomeContato = "Jao";
+
+        System.out.println(meuContato.nomeContato + " - " + meuContato.numero);            
+        }
+}
