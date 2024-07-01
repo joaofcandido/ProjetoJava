@@ -89,6 +89,52 @@ public class Main {
             System.out.println("Não foi possível renomear o arquivo temporário.");
         }
     }
+
+public static void editarContato(String nomeAntigo) {
+    File inputFile = new File("contatos.txt");
+    File tempFile = new File("temp.txt");
+
+    Scanner sc = new Scanner(System.in);
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+         PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
+
+        String line;
+        boolean contatoEncontrado = false;
+
+        while ((line = reader.readLine()) != null) {
+            if (line.startsWith(nomeAntigo + ",")) {
+                contatoEncontrado = true;
+
+                System.out.println("Digite o novo nome do contato:");
+                String novoNome = sc.nextLine();
+                System.out.println("Digite o novo número do contato:");
+                String novoNumero = sc.nextLine();
+
+                writer.println(novoNome + "," + novoNumero);
+            } else {
+                writer.println(line);
+            }
+        }
+
+        if (!contatoEncontrado) {
+            System.out.println("Contato não encontrado.");
+        }
+
+    } catch (IOException e) {
+        System.out.println("Erro ao manipular o arquivo: " + e.getMessage());
+    }
+
+    if (!inputFile.delete()) {
+        System.out.println("Não foi possível excluir o arquivo original.");
+        return;
+    }
+
+    if (!tempFile.renameTo(inputFile)) {
+        System.out.println("Não foi possível renomear o arquivo temporário.");
+    }
+}
+
     public static void listarContatos() {
         try (BufferedReader reader = new BufferedReader(new FileReader("contatos.txt"))) {
             String line;
