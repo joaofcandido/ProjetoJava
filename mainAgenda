@@ -6,11 +6,11 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int option = 0;
 
-        while (option != 4) {
+        while (option != 5) {
             System.out.println("MENU \n");
             System.out.println("1- Adicionar Novo Contato");
             System.out.println("2- Ver Lista De Contatos");
-			System.out.println("3- Editar Contato Existente");
+            System.out.println("3- Editar Contato Existente");
             System.out.println("4- Remover Contato");
             System.out.println("5- Sair da Agenda");
 
@@ -30,10 +30,12 @@ public class Main {
                     System.out.println("Lista de Contatos:");
                     listarContatos();
                     break;
-				case 3:
-					System.out.println("Digite o novo nome do contato");
-					String nomeEditar = sc.nextLine();
-					editarContato(nomeEditar);
+                case 3:
+                    System.out.println("Digite o nome do contato que deseja editar:");
+                    String nomeEditar = sc.nextLine();
+                    editarContato(nomeEditar);
+                    break;
+
                 case 4:
                     System.out.println("Digite o nome do contato que deseja remover:");
                     String nomeRemover = sc.nextLine();
@@ -95,50 +97,50 @@ public class Main {
         }
     }
 
-public static void editarContato(String nomeAntigo) {
-    File inputFile = new File("contatos.txt");
-    File tempFile = new File("temp.txt");
+    public static void editarContato(String nomeAntigo) {
+        File inputFile = new File("contatos.txt");
+        File tempFile = new File("temp.txt");
 
-    Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
 
-    try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-         PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+             PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
 
-        String line;
-        boolean contatoEncontrado = false;
+            String line;
+            boolean contatoEncontrado = false;
 
-        while ((line = reader.readLine()) != null) {
-            if (line.startsWith(nomeAntigo + ",")) {
-                contatoEncontrado = true;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(nomeAntigo + ",")) {
+                    contatoEncontrado = true;
 
-                System.out.println("Digite o novo nome do contato:");
-                String novoNome = sc.nextLine();
-                System.out.println("Digite o novo número do contato:");
-                String novoNumero = sc.nextLine();
+                    System.out.println("Digite o novo nome do contato:");
+                    String novoNome = sc.nextLine();
+                    System.out.println("Digite o novo número do contato:");
+                    String novoNumero = sc.nextLine();
 
-                writer.println(novoNome + "," + novoNumero);
-            } else {
-                writer.println(line);
+                    writer.println(novoNome + "," + novoNumero);
+                } else {
+                    writer.println(line);
+                }
             }
+
+            if (!contatoEncontrado) {
+                System.out.println("Contato não encontrado.");
+            }
+
+        } catch (IOException e) {
+            System.out.println("Erro ao manipular o arquivo: " + e.getMessage());
         }
 
-        if (!contatoEncontrado) {
-            System.out.println("Contato não encontrado.");
+        if (!inputFile.delete()) {
+            System.out.println("Não foi possível excluir o arquivo original.");
+            return;
         }
 
-    } catch (IOException e) {
-        System.out.println("Erro ao manipular o arquivo: " + e.getMessage());
+        if (!tempFile.renameTo(inputFile)) {
+            System.out.println("Não foi possível renomear o arquivo temporário.");
+        }
     }
-
-    if (!inputFile.delete()) {
-        System.out.println("Não foi possível excluir o arquivo original.");
-        return;
-    }
-
-    if (!tempFile.renameTo(inputFile)) {
-        System.out.println("Não foi possível renomear o arquivo temporário.");
-    }
-}
 
     public static void listarContatos() {
         try (BufferedReader reader = new BufferedReader(new FileReader("contatos.txt"))) {
